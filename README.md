@@ -23,3 +23,5 @@ Examples (some implemented, some not) include:
  - Is the data under different labels statistically separable?
  - If you have an old dataset and a new dataset (or two halves of the same dataset), is the distribution of each dimension stationary? Check for divergence with a KS test.
  - What else? I end up applying these tricks in a very ad hoc fashion, whenever a subtle bug pops up, and not rigorously before each project I tackle. I'd like to stuff all these tricks in one place, and run them like a unit test, or a continuous integration test, on data that I start working with.
+ 
+[Should probably also think about dsadd](https://github.com/TomAugspurger/DSADD/blob/master/dsadd/checks.py)
