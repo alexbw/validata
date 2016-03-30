@@ -1,11 +1,10 @@
 import numpy as np
 import errors
 
-# TODO: Work on streaming data
 # TODO: Cache the covariance matrix
 # TODO: Optionally warn, instead of error
 # TODO: Check non-stationarity
-# TODO: Dynamic threshold for condition number based on type
+# TODO: Dynamic threshold for condition number based on type?
 
 def check(data=None, labels=None):
     rng = np.random.RandomState()
@@ -15,23 +14,21 @@ def check(data=None, labels=None):
     _data = None if data is None else np.array(data)
     _labels = None if labels is None else np.array(labels)
 
-    if _data:
+    if _data is not None:
         check_constant_columns(_data)
         check_ill_conditioned(_data)
-        check_degenerate_covariance(_data)
-    if _labels:
+    if _labels is not None:
         check_labels_are_1d_or_2d(_labels)
         if labels_are_one_hot(_labels):
             check_all_classes_used(_labels)
         elif labels_are_integer(_labels):
             check_classes_are_contiguous(_labels)
         elif labels_are_strings(_labels):
-            check_classes_have_no_case_conflicts(labels)
-    if _labels and _data:
+            continue
+    if _labels is not None and _data is not None:
         check_statistically_significant_splits(_data,_labels)
 
     rng.set_state(init_rng_state)
-
 
 def check_constant_columns(data):
     for i,column in enumerate(data.T):
@@ -57,19 +54,22 @@ def labels_are_one_hot(labels):
         return False
 
 def labels_are_strings(labels):
-    pass
+    return labels.dtype.kind == 'S'
 
 def labels_are_integer(labels):
-    pass
+    return labels.dtype.kind == 'i'
+
+def labels_are_float(labels):
+    return labels.dtype.kind == 'f'
 
 def check_all_classes_used(labels):
-    pass
+    return np.all(np.sum(labels,axis=0)>0)
 
 def check_classes_are_contiguous(labels):
-    pass
-
-def check_classes_have_no_case_conflicts(labels):
-    pass
+    return np.all(np.diff(np.unique(labels))==1)
 
 def check_statistically_significant_splits(data, labels):
+    pass
+
+def check_stationarity(data_old, data_new):
     pass
